@@ -107,6 +107,44 @@ namespace ProjetoEcommerce.Repositorio
                 return Productlist;
             }
         }
+        public Cliente ObterCliente(int Codigo)
+        {
+            // Bloco using para garantir que a conexão seja fechada e os recursos liberados após o uso
+            using (var conexao = new MySqlConnection(_conexaoMySQL))
+            {
+                // Abre a conexão com o banco de dados MySQL
+                conexao.Open();
+                // Cria um novo comando SQL para selecionar um registro da tabela 'cliente' com base no código
+                MySqlCommand cmd = new MySqlCommand("SELECT * from cliente where CodProd=@codigo ", conexao);
+
+                // Adiciona um parâmetro para o código a ser buscado, definindo seu tipo e valor
+                cmd.Parameters.AddWithValue("@codigo", Codigo);
+
+                // Cria um adaptador de dados (não utilizado diretamente para ExecuteReader)
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                // Declara um leitor de dados do MySQL
+                MySqlDataReader dr;
+                // Cria um novo objeto Cliente para armazenar os resultados
+                Cliente cliente = new Cliente();
+
+                /* Executa o comando SQL e retorna um objeto MySqlDataReader para ler os resultados
+                CommandBehavior.CloseConnection garante que a conexão seja fechada quando o DataReader for fechado*/
+
+                dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                // Lê os resultados linha por linha
+                while (dr.Read())
+                {
+                    // Preenche as propriedades do objeto Cliente com os valores da linha atual
+                    cliente.CodCli = Convert.ToInt32(dr["CodCli"]);//propriedade Codigo e convertendo para int
+                    cliente.NomeCli = (string)(dr["NomeCli"]); // propriedade Nome e passando string
+                    cliente.TelCli = (string)(dr["TelCli"]); //propriedade telefone e passando string
+                    cliente.EmailCli = (string)(dr["EmailCli"]); //propriedade email e passando string
+                }
+                // Retorna o objeto Cliente encontrado (ou um objeto com valores padrão se não encontrado)
+                return cliente;
+            }
+        }
 
     }
 }
