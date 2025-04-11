@@ -1,6 +1,10 @@
-﻿namespace ProjetoEcommerce.Repositorio
+﻿using System.Configuration;
+
+namespace ProjetoEcommerce.Repositorio
 {
-    public class ProdutoRepositorio
+    public class ProdutoRepositorio(IConfiguration configuration)
     {
+        private readonly string _conexaoMySQL = configuration.GetConnectionString("ConexaoMySQL");
+
     }
 }
