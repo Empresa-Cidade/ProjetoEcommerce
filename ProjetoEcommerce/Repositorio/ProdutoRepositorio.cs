@@ -67,10 +67,10 @@ namespace ProjetoEcommerce.Repositorio
 
             }
         }
-        public IEnumerable<Produto> TodosClientes()
+        public IEnumerable<Produto> TodosProdutos()
         {
             // Cria uma nova lista para armazenar os objetos Cliente
-            List<Cliente> Clientlist = new List<Cliente>();
+            List<Produto> Productlist = new List<Produto>();
 
             // Bloco using para garantir que a conexão seja fechada e os recursos liberados após o uso
             using (var conexao = new MySqlConnection(_conexaoMySQL))
@@ -78,7 +78,7 @@ namespace ProjetoEcommerce.Repositorio
                 // Abre a conexão com o banco de dados MySQL
                 conexao.Open();
                 // Cria um novo comando SQL para selecionar todos os registros da tabela 'cliente'
-                MySqlCommand cmd = new MySqlCommand("SELECT * from cliente", conexao);
+                MySqlCommand cmd = new MySqlCommand("SELECT * from produto", conexao);
 
                 // Cria um adaptador de dados para preencher um DataTable com os resultados da consulta
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
@@ -93,17 +93,18 @@ namespace ProjetoEcommerce.Repositorio
                 foreach (DataRow dr in dt.Rows)
                 {
                     // Cria um novo objeto Cliente e preenche suas propriedades com os valores da linha atual
-                    Clientlist.Add(
-                                new Cliente
+                    Productlist.Add(
+                                new Produto
                                 {
-                                    CodCli = Convert.ToInt32(dr["CodCli"]), // Converte o valor da coluna "codigo" para inteiro
-                                    NomeCli = ((string)dr["NomeCli"]), // Converte o valor da coluna "nome" para string
-                                    TelCli = ((string)dr["TelCli"]), // Converte o valor da coluna "telefone" para string
-                                    EmailCli = ((string)dr["EmailCli"]), // Converte o valor da coluna "email" para string
+                                    CodProd = Convert.ToInt32(dr["CodProd"]), // Converte o valor da coluna "codigo" para inteiro
+                                    NomeProd = ((string)dr["NomeProd"]), // Converte o valor da coluna "nome" para string
+                                    Descricao = ((string)dr["Descricao"]), // Converte o valor da coluna "telefone" para string
+                                    Quantidade = Convert.ToInt32(dr["Quantidade"]),
+                                    Preco = ((decimal)dr["Preco"])// Converte o valor da coluna "email" para string
                                 });
                 }
                 // Retorna a lista de todos os clientes
-                return Clientlist;
+                return Productlist;
             }
         }
 
