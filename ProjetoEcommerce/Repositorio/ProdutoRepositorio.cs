@@ -17,7 +17,7 @@ namespace ProjetoEcommerce.Repositorio
                 // Abre a conexão com o banco de dados MySQL
                 conexao.Open();
                 // Cria um novo comando SQL para inserir dados na tabela 'cliente'
-                MySqlCommand cmd = new MySqlCommand("insert into cliente (NomeProd,Descricao,Quantidade,Preco) values (@nomeProd, @descricao, @quantidade, @preco)", conexao); // @: PARAMETRO
+                MySqlCommand cmd = new MySqlCommand("insert into produto (NomeProd,Descricao,Quantidade,Preco) values (@nomeProd, @descricao, @quantidade, @preco)", conexao); // @: PARAMETRO
                                                                                                                                                  // Adiciona um parâmetro para o nome, definindo seu tipo e valor
                 cmd.Parameters.Add("@nomeProd", MySqlDbType.VarChar).Value = produto.NomeProd;
                 // Adiciona um parâmetro para o telefone, definindo seu tipo e valor
@@ -107,7 +107,7 @@ namespace ProjetoEcommerce.Repositorio
                 return Productlist;
             }
         }
-        public Cliente ObterCliente(int Codigo)
+        public Produto ObterProduto(int Codigo)
         {
             // Bloco using para garantir que a conexão seja fechada e os recursos liberados após o uso
             using (var conexao = new MySqlConnection(_conexaoMySQL))
@@ -115,7 +115,7 @@ namespace ProjetoEcommerce.Repositorio
                 // Abre a conexão com o banco de dados MySQL
                 conexao.Open();
                 // Cria um novo comando SQL para selecionar um registro da tabela 'cliente' com base no código
-                MySqlCommand cmd = new MySqlCommand("SELECT * from cliente where CodProd=@codigo ", conexao);
+                MySqlCommand cmd = new MySqlCommand("SELECT * from produto where CodProd=@codigo ", conexao);
 
                 // Adiciona um parâmetro para o código a ser buscado, definindo seu tipo e valor
                 cmd.Parameters.AddWithValue("@codigo", Codigo);
@@ -126,7 +126,7 @@ namespace ProjetoEcommerce.Repositorio
                 // Declara um leitor de dados do MySQL
                 MySqlDataReader dr;
                 // Cria um novo objeto Cliente para armazenar os resultados
-                Cliente cliente = new Cliente();
+                Produto produto = new Produto();
 
                 /* Executa o comando SQL e retorna um objeto MySqlDataReader para ler os resultados
                 CommandBehavior.CloseConnection garante que a conexão seja fechada quando o DataReader for fechado*/
@@ -136,13 +136,33 @@ namespace ProjetoEcommerce.Repositorio
                 while (dr.Read())
                 {
                     // Preenche as propriedades do objeto Cliente com os valores da linha atual
-                    cliente.CodCli = Convert.ToInt32(dr["CodCli"]);//propriedade Codigo e convertendo para int
-                    cliente.NomeCli = (string)(dr["NomeCli"]); // propriedade Nome e passando string
-                    cliente.TelCli = (string)(dr["TelCli"]); //propriedade telefone e passando string
-                    cliente.EmailCli = (string)(dr["EmailCli"]); //propriedade email e passando string
-                }
-                // Retorna o objeto Cliente encontrado (ou um objeto com valores padrão se não encontrado)
-                return cliente;
+                    produto.CodProd = Convert.ToInt32(dr["CodProd"]);//propriedade Codigo e convertendo para int
+                    produto.NomeProd = (string)(dr["NomeProd"]); // propriedade Nome e passando string
+                    produto.Descricao = (string)(dr["Descricao"]); //propriedade telefone e passando string
+                    produto.Quantidade = Convert.ToInt32(dr["Quantidade"]); //propriedade email e passando string
+                    produto.Preco = (decimal)(dr["Preco"]);
+                }  
+             return produto;
+            }
+        }
+        public void ExcluirProduto(int Id)
+        {
+            // Bloco using para garantir que a conexão seja fechada e os recursos liberados após o uso
+            using (var conexao = new MySqlConnection(_conexaoMySQL))
+            {
+                // Abre a conexão com o banco de dados MySQL
+                conexao.Open();
+
+                // Cria um novo comando SQL para deletar um registro da tabela 'cliente' com base no código
+                MySqlCommand cmd = new MySqlCommand("delete from produto where CodProd=@codigo", conexao);
+
+                // Adiciona um parâmetro para o código a ser excluído, definindo seu tipo e valor
+                cmd.Parameters.AddWithValue("@codigo", Id);
+
+                // Executa o comando SQL de exclusão e retorna o número de linhas afetadas
+                int i = cmd.ExecuteNonQuery();
+
+                conexao.Close(); // Fecha  a conexão com o banco de dados
             }
         }
 
