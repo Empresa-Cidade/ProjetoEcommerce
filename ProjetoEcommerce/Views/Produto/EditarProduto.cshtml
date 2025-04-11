@@ -35,12 +35,19 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="Preco" class="control-label"></label>
+                <input asp-for="Preco" class="form-control" />
+                <span asp-validation-for="Preco" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <input type="submit" value="Alterar" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="PainelCliente">Voltar</a>
+    <a asp-action="Index">Voltar</a>
 </div>
